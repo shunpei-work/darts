@@ -3,16 +3,20 @@ import styled from 'styled-components'
 import { useState } from "react";
 
 interface ScoreButtonProps {
-    numClick: (value: number) => void;
+    numClick: (value) => void;
   }
-
+  
+// スコアボタンのコンポーネントを定義
+// 数字をクリック、OKをクリックで「スコア入力」に値を追加
 const ScoreButton: React.FC<ScoreButtonProps> = ({ numClick }) => {
     // 数値リストを定義
     const numbers = [...Array(20).keys()].map((num) => num + 1).concat(50);
+    // スコアエリアボタンの状態を管理
     const [singleButtonActive, setSingleButtonActive] = useState(true);
     const [doubleButtonActive, setDoubleButtonActive] = useState(false);
     const [tripleButtonActive, setTripleButtonActive] = useState(false);
 
+    // スコアエリアボタンの押下時の処理
     const toggleButtonState = (value) => {
       if (value === "Single" && singleButtonActive === false) {
         setSingleButtonActive((activeState) => !activeState);
@@ -32,7 +36,20 @@ const ScoreButton: React.FC<ScoreButtonProps> = ({ numClick }) => {
     return (
       <Container>
         {numbers.map((number) => (
-          <StyledButton key={number} onClick={() => numClick(number)}>
+          <StyledButton 
+          key={number} 
+          onClick={() => {
+            // 数字ボタンクリック時の処理
+            // スコアエリアボタンの状態に応じてスコアを計算
+            if (number !== 50) {
+              if (doubleButtonActive === true)  {
+                number = number * 2
+              }　else if(tripleButtonActive === true) {
+                number = number * 3
+              }
+            }
+            numClick(number)
+            }}>
             {number}
           </StyledButton>
         ))}
@@ -45,8 +62,12 @@ const ScoreButton: React.FC<ScoreButtonProps> = ({ numClick }) => {
           <ScoreAreaButton onClick={() => toggleButtonState("Triple")} isActive={tripleButtonActive}>
             Triple
           </ScoreAreaButton>
-        <StyledButton>OK</StyledButton>
-        <StyledButton>取り消し</StyledButton>
+        <StyledButton onClick={() =>  numClick("OK")}>OK</StyledButton>
+        <StyledButton 
+          onClick={() =>  
+            numClick("取り消し")
+          }>取り消し
+        </StyledButton>
       </Container>
       );
   };
@@ -58,7 +79,7 @@ const ScoreButton: React.FC<ScoreButtonProps> = ({ numClick }) => {
     gap: 10px;
     justify-content: center;
     align-items: center;
-    margin: 20px;
+    margin: 70px;
   `;
   
   const StyledButton = styled.button`

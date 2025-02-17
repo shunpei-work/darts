@@ -33,26 +33,50 @@ const ScoreHistory = styled.div`
 
 export const Editor: React.FC = () => {
   const [score, setScore] = React.useState<number>(101); // スコアを管理
+  const [scoreScreen, setScoreScreen] = React.useState<number[]>([]); // スコアを一時的に表示
   const [scoreHistory, setScoreHistory] = React.useState<number[]>([]); // スコアの履歴を管理
+  
+  // OKボタンが押された時の処理
+  // スコア入力の数字をスコアに反映、履歴に追加
+  const handleScoreChange = () => {
+    scoreScreen.forEach((value) => {
+      setScore((prevScore) => prevScore - value);
+      setScoreHistory((prevHistory) => [...prevHistory, value]);
+    });
+    setScoreScreen([]);
+  }
 
-  // スコアの変更を処理
-  const handleScoreChange = (buttonValue: number) => {
-    setScore((prevScore) => prevScore - buttonValue);
-    setScoreHistory((prevHistory) => [...prevHistory, buttonValue]);
+  // スコア入力リスト
+  // スコアの変更を一時的に表示
+  const handleScoreScreen = (buttonValue: number) => {
+    if (scoreScreen.length < 3) {
+      setScoreScreen((scoreScreenList) => [...scoreScreenList, buttonValue]);
+    }
   }
 
     return (
       <>
         <Header>
-          スコア：{score}
-          <ScoreHistory>スコア履歴：
+          <div>スコア：{score}</div>
+          <div>スコア入力：{scoreScreen}</div>
+          <ScoreHistory>
+          スコア履歴：
             {scoreHistory.map((value) => (
               <span>{value}</span>
             ))}
           </ScoreHistory>
         </Header>
         <Wrapper>
-          <ScoreButton numClick={handleScoreChange} />
+          <ScoreButton numClick={(buttonValue) => {
+            if(buttonValue === "OK") {
+              handleScoreChange();
+            } else if (buttonValue === "取り消し") {
+              // スコア入力リストから最後にクリックした数字を削除
+              setScoreScreen(scoreScreenList => scoreScreenList.slice(0, -1));
+            } else {
+              handleScoreScreen(buttonValue);
+            }
+          }} />
         </Wrapper>
       </>
     )
