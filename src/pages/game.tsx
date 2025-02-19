@@ -4,18 +4,17 @@ import styled from 'styled-components'
 import ScoreButton from './scoreButton'
 
 const Header = styled.header`
+  background-color: #333;
+  color: #fff;
+  font-family: 'Arial', sans-serif;
   font-size: 1.5rem;
-  height: 2rem;
+  height: 14rem;
   left: 0;
   line-height: 2rem;
   padding: 0.5rem 1rem;
   position: fixed;
   right: 0;
   top: 0;
-`
-
-const MainScore = styled.div`
-
 `
 
 const Wrapper = styled.div`
@@ -25,7 +24,20 @@ const Wrapper = styled.div`
   right: 0;
   top: 3rem;
 `
+const Score = styled.div`
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  font-size: 10rem;
+  height: 10rem;
+  margin: 0 auto;
+`
+
 const ScoreHistory = styled.div`
+
+`
+
+const ScoreInput = styled.div`
 
 `
 
@@ -57,8 +69,8 @@ export const Editor: React.FC = () => {
     return (
       <>
         <Header>
-          <div>スコア：{score}</div>
-          <div>スコア入力：{scoreScreen}</div>
+          <Score>{score}</Score>
+          <ScoreInput>スコア入力：{scoreScreen}</ScoreInput>
           <ScoreHistory>
           スコア履歴：
             {scoreHistory.map((value) => (

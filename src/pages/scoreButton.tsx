@@ -79,7 +79,7 @@ const ScoreButton: React.FC<ScoreButtonProps> = ({ numClick }) => {
     gap: 10px;
     justify-content: center;
     align-items: center;
-    margin: 70px;
+    margin: 200px 0;
   `;
   
   const StyledButton = styled.button`
