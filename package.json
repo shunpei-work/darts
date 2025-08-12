@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "scripts": {
         "start": "webpack serve --mode=development",
-        "build": "webpack --mode=production"
+        "build": "webpack --mode=production",
+        "test": "jest"
     },
     "dependencies": {
         "@emotion/react": "^11.14.0",
@@ -18,5 +19,10 @@
         "webpack": "^5.97.1",
         "webpack-cli": "^4.10.0",
         "webpack-dev-server": "^3.11.3"
+    },
+    "devDependencies": {
+        "@types/jest": "^30.0.0",
+        "jest": "^30.0.5",
+        "ts-jest": "^29.4.1"
     }
 }

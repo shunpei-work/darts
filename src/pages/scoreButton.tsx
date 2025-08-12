@@ -1,37 +1,25 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { useState } from "react";
 
 interface ScoreButtonProps {
     numClick: (value) => void;
+    singleButtonActive: boolean;
+    doubleButtonActive: boolean;
+    tripleButtonActive: boolean;
+    onMultiplierToggle: (value: string) => void;
   }
   
 // スコアボタンのコンポーネントを定義
 // 数字をクリック、OKをクリックで「スコア入力」に値を追加
-const ScoreButton: React.FC<ScoreButtonProps> = ({ numClick }) => {
+const ScoreButton: React.FC<ScoreButtonProps> = ({ 
+  numClick, 
+  singleButtonActive, 
+  doubleButtonActive, 
+  tripleButtonActive, 
+  onMultiplierToggle 
+}) => {
     // 数値リストを定義
     const numbers = [...Array(20).keys()].map((num) => num + 1).concat(50);
-    // スコアエリアボタンの状態を管理
-    const [singleButtonActive, setSingleButtonActive] = useState(true);
-    const [doubleButtonActive, setDoubleButtonActive] = useState(false);
-    const [tripleButtonActive, setTripleButtonActive] = useState(false);
-
-    // スコアエリアボタンの押下時の処理
-    const toggleButtonState = (value) => {
-      if (value === "Single" && singleButtonActive === false) {
-        setSingleButtonActive((activeState) => !activeState);
-        setDoubleButtonActive(false);
-        setTripleButtonActive(false);
-      } else if (value === "Double" && doubleButtonActive === false) {
-        setDoubleButtonActive((activeState) => !activeState);
-        setSingleButtonActive(false);
-        setTripleButtonActive(false);
-      } else if (value === "Triple" && tripleButtonActive === false) {
-        setTripleButtonActive((activeState) => !activeState);
-        setSingleButtonActive(false);
-        setDoubleButtonActive(false);
-      }
-    };
   
     return (
       <Container>
@@ -52,13 +40,13 @@ const ScoreButton: React.FC<ScoreButtonProps> = ({ numClick }) => {
             {number}
           </StyledButton>
         ))}
-          <ScoreAreaButton onClick={() => toggleButtonState("Single")} isActive={singleButtonActive}>
+          <ScoreAreaButton onClick={() => onMultiplierToggle("Single")} isActive={singleButtonActive}>
             Single
           </ScoreAreaButton>
-          <ScoreAreaButton onClick={() => toggleButtonState("Double")} isActive={doubleButtonActive}>
+          <ScoreAreaButton onClick={() => onMultiplierToggle("Double")} isActive={doubleButtonActive}>
             Double
           </ScoreAreaButton>
-          <ScoreAreaButton onClick={() => toggleButtonState("Triple")} isActive={tripleButtonActive}>
+          <ScoreAreaButton onClick={() => onMultiplierToggle("Triple")} isActive={tripleButtonActive}>
             Triple
           </ScoreAreaButton>
         <StyledButton onClick={() =>  numClick("OK")}>OK</StyledButton>
@@ -78,6 +66,17 @@ const ScoreButton: React.FC<ScoreButtonProps> = ({ numClick }) => {
     justify-content: center;
     align-items: center;
     margin: 200px 0;
+    padding: 0 1rem; /* Add horizontal padding for better mobile experience */
+    
+    @media (max-width: 768px) {
+      margin: 50px 0; /* Reduce top/bottom margin on mobile */
+      gap: 8px; /* Slightly reduce gap on mobile */
+    }
+    
+    @media (max-width: 480px) {
+      gap: 5px; /* Further reduce gap on very small screens */
+      padding: 0 0.5rem;
+    }
   `;
   
   const StyledButton = styled.button`
@@ -89,6 +88,8 @@ const ScoreButton: React.FC<ScoreButtonProps> = ({ numClick }) => {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    min-width: 44px; /* Ensure minimum touch target size */
+    min-height: 44px;
   
     &:hover {
       background-color: #0056b3;
@@ -96,6 +97,11 @@ const ScoreButton: React.FC<ScoreButtonProps> = ({ numClick }) => {
   
     &:active {
       background-color: #004494;
+    }
+    
+    @media (max-width: 480px) {
+      padding: 8px 12px; /* Slightly reduce padding on very small screens */
+      font-size: 14px; /* Slightly reduce font size */
     }
   `;
 
@@ -108,11 +114,18 @@ const ScoreButton: React.FC<ScoreButtonProps> = ({ numClick }) => {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    min-width: 44px; /* Ensure minimum touch target size */
+    min-height: 44px;
   
    background-color: ${(props) => (props.isActive ? "#4caf50" : "#d3d3d3")};
   color: ${(props) => (props.isActive ? "white" : "black")};
   &:hover {
     background-color: ${(props) => (props.isActive ? "#45a049" : "#c0c0c0")};
+  }
+  
+  @media (max-width: 480px) {
+    padding: 8px 12px; /* Slightly reduce padding on very small screens */
+    font-size: 14px; /* Slightly reduce font size */
   }
   `;
   
