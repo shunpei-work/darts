@@ -39,7 +39,6 @@ const ScoreButton: React.FC<ScoreButtonProps> = ({ numClick }) => {
           <StyledButton 
           key={number} 
           onClick={() => {
-            // 数字ボタンクリック時の処理
             // スコアエリアボタンの状態に応じてスコアを計算
             if (number !== 50) {
               if (doubleButtonActive === true)  {
@@ -72,7 +71,6 @@ const ScoreButton: React.FC<ScoreButtonProps> = ({ numClick }) => {
       );
   };
   
-  // Styled-components のスタイル定義
   const Container = styled.div`
     display: flex;
     flex-wrap: wrap;

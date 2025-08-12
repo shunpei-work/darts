@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { useEffect } from 'react'
 import styled from 'styled-components'
 import ScoreButton from './scoreButton'
 
@@ -33,29 +32,59 @@ const Score = styled.div`
   margin: 0 auto;
 `
 
-const ScoreHistory = styled.div`
-
-`
-
 const ScoreInput = styled.div`
 
 `
 
+const ScoreHistory = styled.div`
+
+`
 
 
 export const Editor: React.FC = () => {
-  const [score, setScore] = React.useState<number>(101); // スコアを管理
+  const [score, setScore] = React.useState<number>(151); // スコアを管理
   const [scoreScreen, setScoreScreen] = React.useState<number[]>([]); // スコアを一時的に表示
   const [scoreHistory, setScoreHistory] = React.useState<number[]>([]); // スコアの履歴を管理
-  
+
+  // ゲームをリセットする関数
+  const resetGame = () => {
+    setScore(151);
+    setScoreScreen([]);
+    setScoreHistory([]);
+  };
+
   // OKボタンが押された時の処理
   // スコア入力の数字をスコアに反映、履歴に追加
   const handleScoreChange = () => {
+    let newScore = score;
+    const currentRoundScores: number[] = [];
+
     scoreScreen.forEach((value) => {
-      setScore((prevScore) => prevScore - value);
-      setScoreHistory((prevHistory) => [...prevHistory, value]);
+      newScore -= value;
+      currentRoundScores.push(value);
     });
-    setScoreScreen([]);
+
+    // スコアチェックを新しいスコアで実行
+    if (newScore === 0) {
+      setScore(newScore);
+      setScoreHistory((prevHistory) => [...prevHistory, ...currentRoundScores]);
+      setScoreScreen([]);
+      setTimeout(() => {
+        alert("ナイスアウト！");
+        resetGame();
+      }, 100);
+    } else if (newScore < 0) {
+      // マイナスになった場合は直前のスコアに戻す（変更を適用しない）
+      setScoreScreen([]);
+      setTimeout(() => {
+        alert("残念、失敗");
+      }, 100);
+    } else {
+      // 正常な場合のみスコアと履歴を更新
+      setScore(newScore);
+      setScoreHistory((prevHistory) => [...prevHistory, ...currentRoundScores]);
+      setScoreScreen([]);
+    }
   }
 
   // スコア入力リスト
@@ -66,31 +95,31 @@ export const Editor: React.FC = () => {
     }
   }
 
-    return (
-      <>
-        <Header>
-          <Score>{score}</Score>
-          <ScoreInput>スコア入力：{scoreScreen}</ScoreInput>
-          <ScoreHistory>
+  return (
+    <>
+      <Header>
+        <Score>{score}</Score>
+        <ScoreInput>スコア入力：{scoreScreen + " "}</ScoreInput>
+        <ScoreHistory>
           スコア履歴：
-            {scoreHistory.map((value) => (
-              <span>{value}</span>
-            ))}
-          </ScoreHistory>
-        </Header>
-        <Wrapper>
-          <ScoreButton numClick={(buttonValue) => {
-            if(buttonValue === "OK") {
-              handleScoreChange();
-            } else if (buttonValue === "取り消し") {
-              // スコア入力リストから最後にクリックした数字を削除
-              setScoreScreen(scoreScreenList => scoreScreenList.slice(0, -1));
-            } else {
-              handleScoreScreen(buttonValue);
-            }
-          }} />
-        </Wrapper>
-      </>
-    )
-  
-  }
+          {scoreHistory.map((value) => (
+            <span>{value + " "}</span>
+          ))}
+        </ScoreHistory>
+      </Header>
+      <Wrapper>
+        <ScoreButton numClick={(buttonValue) => {
+          if (buttonValue === "OK") {
+            handleScoreChange();
+          } else if (buttonValue === "取り消し") {
+            // スコア入力リストから最後にクリックした数字を削除
+            setScoreScreen(scoreScreenList => scoreScreenList.slice(0, -1));
+          } else {
+            handleScoreScreen(buttonValue);
+          }
+        }} />
+      </Wrapper>
+    </>
+  )
+
+}
