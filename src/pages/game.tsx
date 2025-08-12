@@ -64,10 +64,13 @@ export const Editor: React.FC = () => {
       currentRoundScores.push(value);
     });
 
+    // 個別スコアの合計値を計算
+    const roundTotal = currentRoundScores.reduce((sum, score) => sum + score, 0);
+
     // スコアチェックを新しいスコアで実行
     if (newScore === 0) {
       setScore(newScore);
-      setScoreHistory((prevHistory) => [...prevHistory, ...currentRoundScores]);
+      setScoreHistory((prevHistory) => [...prevHistory, roundTotal]);
       setScoreScreen([]);
       setTimeout(() => {
         alert("ナイスアウト！");
@@ -82,7 +85,7 @@ export const Editor: React.FC = () => {
     } else {
       // 正常な場合のみスコアと履歴を更新
       setScore(newScore);
-      setScoreHistory((prevHistory) => [...prevHistory, ...currentRoundScores]);
+      setScoreHistory((prevHistory) => [...prevHistory, roundTotal]);
       setScoreScreen([]);
     }
   }
